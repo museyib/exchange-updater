@@ -1,0 +1,49 @@
+package az.inci.exchangeupdater;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+@Service
+public class WebDataService
+{
+    @Autowired
+    private CurrencyService currencyService;
+    public List<CurrencyExchange> getExchangeList()
+    {
+
+        List<CurrencyExchange> exchangeList = new ArrayList<>();
+        List<String> currencies = currencyService.getCurrencies();
+        System.out.println(currencies);
+        Document doc;
+        try {
+            doc = Jsoup.connect("https://www.cbar.az/currency/rates").get();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        Elements dataTable = doc.select(".table_items");
+        for (Element element : dataTable.select(".table_row")) {
+            String currencyCode = element.select(".kod").get(0).text().toUpperCase();
+            double rate = Double.parseDouble(element.select(".kurs").get(0).text());
+            if (currencies.contains(currencyCode))
+            {
+                CurrencyExchange exchange = new CurrencyExchange();
+                exchange.setCurrencyCode(currencyCode);
+                exchange.setRate(rate);
+                exchangeList.add(exchange);
+            }
+        }
+
+        return exchangeList;
+    }
+}
