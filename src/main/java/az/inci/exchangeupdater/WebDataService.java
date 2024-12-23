@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class WebDataService
@@ -34,7 +33,14 @@ public class WebDataService
         Elements dataTable = doc.select(".table_items");
         for (Element element : dataTable.select(".table_row")) {
             String currencyCode = element.select(".kod").get(0).text().toUpperCase();
-            double rate = Double.parseDouble(element.select(".kurs").get(0).text());
+            double unitOfCurrency;
+            try {
+                unitOfCurrency = Double.parseDouble(element.select(".valuta").get(0).text().split(" ")[0]);
+            }
+            catch (NumberFormatException e) {
+                unitOfCurrency = 1;
+            }
+            double rate = Double.parseDouble(element.select(".kurs").get(0).text()) / unitOfCurrency;
             if (currencies.contains(currencyCode))
             {
                 CurrencyExchange exchange = new CurrencyExchange();
