@@ -16,6 +16,7 @@ public class DataUpdateService extends AbstractService
     {
         for(CurrencyExchange exchange : exchangeList)
         {
+            System.out.println("Updating exchange " + exchange);
             StoredProcedureQuery query = em.createStoredProcedureQuery("SP_CREATE_EX_RATE_AUTO");
             query.registerStoredProcedureParameter("CURR_CODE", String.class, IN)
                  .registerStoredProcedureParameter("EX_RATE", Double.class, IN)

@@ -43,6 +43,7 @@ public class WebDataService
             double rate = Double.parseDouble(element.select(".kurs").get(0).text()) / unitOfCurrency;
             if (currencies.contains(currencyCode))
             {
+                System.out.println(element.select(".valuta").get(0).text() + " - " + element.select(".kurs").get(0).text());
                 CurrencyExchange exchange = new CurrencyExchange();
                 exchange.setCurrencyCode(currencyCode);
                 exchange.setRate(rate);
