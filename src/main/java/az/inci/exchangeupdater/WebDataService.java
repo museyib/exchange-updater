@@ -24,7 +24,7 @@ public class WebDataService
         System.out.println(currencies);
         Document doc;
         try {
-            doc = Jsoup.connect("https://www.cbar.az/currency/rates").get();
+            doc = Jsoup.connect("https://cbar.az/currency/rates").get();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
